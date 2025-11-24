@@ -102,7 +102,7 @@ def train_mnist(epochs, net, train_loader, test_loader, optimizer, scheduler, lo
         
         val_accurate, _ = metrics
         print(f'[epoch {epoch + 1}] train_loss: {running_loss / len(train_loader):.3f}  auc: {metrics[0]:.3f}  acc: {metrics[1]:.3f}')
-        print(f'lr: {scheduler.get_last_lr()[-1]:.8f}')
+        #print(f'lr: {scheduler.get_last_lr()[-1]:.8f}')
         if val_accurate > best_acc:
             print('\nSaving checkpoint...')
             best_acc = val_accurate
@@ -208,7 +208,7 @@ def train_other(epochs, net, train_loader, test_loader, optimizer, scheduler, lo
               f'recall: {recall:.4f} specificity: {avg_specificity:.4f} '
               f'f1_score: {f1:.4f} auc: {auc:.4f} overall_accuracy: {overall_acc:.4f}')
         
-        print(f'lr: {scheduler.get_last_lr()[-1]:.8f}')
+        #print(f'lr: {scheduler.get_last_lr()[-1]:.8f}')
         
         # Save best model
         if val_accurate > best_acc:
