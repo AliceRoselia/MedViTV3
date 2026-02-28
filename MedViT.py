@@ -285,7 +285,7 @@ class LFP(nn.Module):
     Efficient Convolution Block
     """
     def __init__(self, in_channels, out_channels, kernel_size=3, stride=1, path_dropout=0.2,
-                 drop=0, head_dim=32, mlp_ratio=3):
+                 head_dim=32, mlp_ratio=3):
         super(LFP, self).__init__()
         self.in_channels = in_channels
         self.out_channels = out_channels
@@ -295,7 +295,6 @@ class LFP(nn.Module):
         self.patch_embed = PatchEmbed(in_channels, out_channels, stride)
         #self.mhca = MHCA(out_channels, head_dim)
         self.norm1 = norm_layer(out_channels)
-        extra_args = {"rel_pos_bias": True} if is_natten_post_017 else {"bias": True}
         self.attn = NeighborhoodAttention(
             out_channels,
             kernel_size=7,
@@ -303,9 +302,7 @@ class LFP(nn.Module):
             num_heads= (out_channels // head_dim),
             qkv_bias=True,
             qk_scale=None,
-            attn_drop=drop,
-            proj_drop=0.0,
-            **extra_args,
+            proj_drop=0.0
         )
         self.attention_path_dropout = DropPath(path_dropout)
 
@@ -479,7 +476,7 @@ class GFP(nn.Module):
 class MedViT(nn.Module):
     def __init__(self, stem_chs=[64, 32, 64], depths=[2, 2, 6, 2],
                  dims=[64, 128, 320, 512], path_dropout=0.1, attn_drop=0,
-                 drop=0, num_classes=1000,
+                 num_classes=1000,
                  strides=[1, 2, 2, 2], sr_ratios=[8, 4, 2, 1], head_dim=32, mix_block_ratio=0.75,
                  use_checkpoint=False):
         super(MedViT, self).__init__()
@@ -520,12 +517,12 @@ class MedViT(nn.Module):
                 block_type = block_types[block_id]
                 if block_type is LFP:
                     layer = LFP(input_channel, output_channel, stride=stride, kernel_size=kernel, path_dropout=dpr[idx + block_id],
-                                drop=drop, head_dim=head_dim)
+                                head_dim=head_dim)
                     features.append(layer)
                 elif block_type is GFP:
                     layer = GFP(input_channel, output_channel, path_dropout=dpr[idx + block_id], stride=stride,
                                 sr_ratio=sr_ratios[stage_id], head_dim=head_dim, mix_block_ratio=mix_block_ratio,
-                                attn_drop=attn_drop, drop=drop)
+                                attn_drop=attn_drop)
                     features.append(layer)
                 input_channel = output_channel
             idx += numrepeat

@@ -268,7 +268,7 @@ def main(args):
                 download_checkpoint(checkpoint_url, f'./{model_name}.pth')
                 checkpoint_path = f'./{model_name}.pth'
 
-            checkpoint = torch.load(checkpoint_path)
+            checkpoint = torch.load(checkpoint_path,weights_only=False)
             state_dict = net.state_dict()
             for k in ['proj_head.0.weight', 'proj_head.0.bias']:
                 if k in checkpoint and checkpoint[k].shape != state_dict[k].shape:
@@ -277,8 +277,10 @@ def main(args):
             net.load_state_dict(checkpoint, strict=False)
     else:
         net = timm.create_model(model_name, pretrained=pretrained, num_classes=nb_classes).cuda()
+    net = torch.compile(net)
 
     
+
     optimizer = optim.AdamW(net.parameters(), lr=lr, betas=[0.9, 0.999], weight_decay=0.05)
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=eta, eta_min=5e-6)
     
