@@ -3,7 +3,7 @@
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Omid-Nejati/MedViTV2/blob/main/Tutorials/Evaluation.ipynb)
 
 <div align="center">
-  <h1 style="font-family: Arial;">MedViT</h1>
+  <h1 style="font-family: Arial;">Below is still for the V2.</h1>
   <h3>MedViTV2: Medical Image Classification with KAN-Integrated Transformers and Dilated Neighborhood Attention</h3>
 </div>
 
